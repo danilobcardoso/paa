@@ -1,37 +1,24 @@
 ## https://www.urionlinejudge.com.br/judge/pt/problems/view/1382
 
 
-def trocas_possiveis(permutacao):
-    trocas_duplas = []
-    trocas_simples = []
-    for idx in range(len(permutacao)-1):
-        idx_ida = idx
-        idx_volta = permutacao[idx_ida] - 1
-        if (idx_volta == permutacao[idx_ida] - 1) and (idx_ida == permutacao[idx_volta] - 1):
-            if idx_volta > idx_ida:
-                trocas_duplas.append((idx_ida, idx_volta))
-        elif idx != (permutacao[idx_ida]-1):
-            trocas_simples.append((idx_ida, idx_volta))
-    return trocas_duplas, trocas_simples
-
-
 
 def numero_trocas(permutacao):
-    trocas_duplas, trocas_simples = trocas_possiveis(permutacao)
-    count = 0
-
-    while (len(trocas_duplas)>0) or (len(trocas_simples)>0):
-        if len(trocas_duplas)>0:
-            for x, y in trocas_duplas:
-                permutacao[x], permutacao[y] = permutacao[y], permutacao[x]
+    visitados = [0 for i in range(len(permutacao))]
+    ciclos = []
+    for i in range(len(permutacao)):
+        if visitados[i] == 0:
+            count = 0
+            next_step = i
+            while (visitados[next_step] == 0):
+                visitados[next_step] = 1
+                next_step = permutacao[next_step]-1
                 count += 1
-        elif len(trocas_simples)>0:
-            x, y = trocas_simples[0]
-            permutacao[x], permutacao[y] = permutacao[y], permutacao[x]
-            count += 1
-        trocas_duplas, trocas_simples = trocas_possiveis(permutacao)
+            count -= 1
+            if count > 0:
+                ciclos.append(count)
+    total = sum(ciclos)
+    return total
 
-    return count
 
 
 
